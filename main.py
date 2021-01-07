@@ -117,8 +117,7 @@ def main():
         song_name = f"{meta['refine_name']}.mp3"
         out_path = osp.join(out_split_dir, song_name)
         song_sound.export(out_path, format="mp3")
-
-        print("Exporting:",meta,' -> ' out_path)
+        print("Exporting:",meta,' -> ', out_path)
 
 if __name__ == '__main__':
     main()
