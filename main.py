@@ -70,7 +70,7 @@ def refine_name(text):
 
     for m in  xxx.findall(text):
         text = text.replace(m, '')
-    return text.replace('\n', '')
+    return text.replace('\n', '').replace('-', '')
 
 def compete_et(meta_sounds, max_sound_length=-1):
     for i, meta in enumerate(meta_sounds):
