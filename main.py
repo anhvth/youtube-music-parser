@@ -108,16 +108,16 @@ def main():
     meta_sounds = [parse_meta(text) for text in lines]
     meta_sounds = compete_et(meta_sounds)
     print(f'Reading {out}')
-    sound = AudioSegment.from_file(out)
-
-    print('Parsing')
+    sound = None
     os.makedirs(out_split_dir, exist_ok=True)
     for i, meta in enumerate(meta_sounds):
-        song_sound = sound[meta['st']*1000:meta['et']*1000]
         song_name = f"{meta['refine_name']}.mp3"
         out_path = osp.join(out_split_dir, song_name)
-        song_sound.export(out_path, format="mp3")
-        print("Exporting:",meta,' -> ', out_path)
+        if not osp.exists(out_path):
+            sound = AudioSegment.from_file(out) if sound is None else sound
+            song_sound = sound[meta['st']*1000:meta['et']*1000]
+            song_sound.export(out_path, format="mp3")
+            print("Exporting:",meta,' -> ', out_path)
 
 if __name__ == '__main__':
     main()
