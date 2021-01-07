@@ -21,7 +21,6 @@ def to_second(x):
     if x is not None:
         h, m, s = x
         h = int(h) if h.isdigit() else 0
-        print(h, m, s)
         return int(m)*60+int(s)+h*3600
     else:
         return x
