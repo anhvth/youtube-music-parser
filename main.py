@@ -13,6 +13,7 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description='args')
     parser.add_argument('meta', help='path to meta data')
+    parser.add_argument('--save-to', default='downloads')
     return parser.parse_args()
 
 
@@ -61,6 +62,16 @@ def download_youtube_mp3(link, out=None):
         ydl.download([link])
 
 
+def refine_name(text):
+    xx = re.compile('[0-9]+:[0-9]+')
+    xxx = re.compile('[01]:[0-9]+:[0-9]+')
+    for m in  xx.findall(text):
+        text = text.replace(m, '')
+
+    for m in  xxx.findall(text):
+        text = text.replace(m, '')
+    return text.replace('\n', '')
+
 def compete_et(meta_sounds, max_sound_length=-1):
     for i, meta in enumerate(meta_sounds):
         if meta['et'] is not None:
@@ -71,10 +82,10 @@ def compete_et(meta_sounds, max_sound_length=-1):
             else:
                 et = max_sound_length
         meta['et'] = et
+        meta['refine_name'] = refine_name(meta['name'])
     df = pd.DataFrame.from_dict(meta_sounds)
     df['duration'] = df['et']-df['st']
     print(df)
-
     return meta_sounds
 
 
@@ -82,10 +93,12 @@ def main():
     args = parse_args()
     with open(args.meta) as f:
         lines = f.readlines()
+    os.makedirs('cache', exist_ok=True)
 
     link = lines[0].replace('\n', '')
-    out = lines[1].replace('\n', '')+'.mp3'
-    out_split_dir = out.split('.')[0]
+
+    out = 'cache/'+lines[1].replace('\n', '')+'.mp3'
+    out_split_dir = osp.join(args.save_to, out.split('.')[0])
 
     lines = lines[2:]
 
@@ -102,7 +115,7 @@ def main():
     for i, meta in enumerate(meta_sounds):
         print("Exporting:", meta)
         song_sound = sound[meta['st']*1000:meta['et']*1000]
-        song_name = f"{meta['name']}.mp3"
+        song_name = f"{meta['refine_name']}.mp3"
         out_path = osp.join(out_split_dir, song_name)
         song_sound.export(out_path, format="mp3")
 
