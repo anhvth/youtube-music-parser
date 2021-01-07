@@ -64,13 +64,14 @@ def download_youtube_mp3(link, out=None):
 
 def refine_name(text):
     xx = re.compile('[0-9]+:[0-9]+')
-    xxx = re.compile('[01]:[0-9]+:[0-9]+')
+    xxx = re.compile('[0-9]+:[0-9]+:[0-9]+')
+    xxx = re.compile('[0-9]')
     for m in  xx.findall(text):
         text = text.replace(m, '')
 
     for m in  xxx.findall(text):
         text = text.replace(m, '')
-    return text.replace('\n', '').replace('-', '')
+    return text.replace('\n', '').replace('-', '').replace(':', '')
 
 def compete_et(meta_sounds, max_sound_length=-1):
     for i, meta in enumerate(meta_sounds):
