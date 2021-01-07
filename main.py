@@ -63,6 +63,7 @@ def download_youtube_mp3(link, out=None):
 
 
 def refine_name(text):
+    ignore_case = ['|', '[', ']', '\n', '/', ':', '-', '.']
     xx = re.compile('[0-9]+:[0-9]+')
     xxx = re.compile('[0-9]+:[0-9]+:[0-9]+')
     xxx = re.compile('[0-9]')
@@ -71,7 +72,9 @@ def refine_name(text):
 
     for m in  xxx.findall(text):
         text = text.replace(m, '')
-    return text.replace('\n', '').replace('-', '').replace(':', '')
+    for case in ignore_case:
+        text = text.replace(case, '')
+    return text
 
 def compete_et(meta_sounds, max_sound_length=-1):
     for i, meta in enumerate(meta_sounds):
