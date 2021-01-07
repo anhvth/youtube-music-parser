@@ -98,7 +98,7 @@ def main():
     link = lines[0].replace('\n', '')
 
     out = 'cache/'+lines[1].replace('\n', '')+'.mp3'
-    out_split_dir = osp.join(args.save_to, out.split('.')[0])
+    out_split_dir = osp.join(args.save_to, os.path.basename(out).split('.')[0])
 
     lines = lines[2:]
 
@@ -113,12 +113,12 @@ def main():
     print('Parsing')
     os.makedirs(out_split_dir, exist_ok=True)
     for i, meta in enumerate(meta_sounds):
-        print("Exporting:", meta)
         song_sound = sound[meta['st']*1000:meta['et']*1000]
         song_name = f"{meta['refine_name']}.mp3"
         out_path = osp.join(out_split_dir, song_name)
         song_sound.export(out_path, format="mp3")
 
+        print("Exporting:",meta,' -> ' out_path)
 
 if __name__ == '__main__':
     main()
